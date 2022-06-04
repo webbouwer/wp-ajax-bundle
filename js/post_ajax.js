@@ -13,13 +13,20 @@ jQuery(function($) {
 
         let type = 'post';
         let tax =  'category'; // $('#loopcontainer').data('taxname');
-        let terms = { 0 : 'blog', 1 : 'nieuws' }; // $('#loopcontainer').data('term'); // cat or sub cat
+        let terms = { 0 : 'blog', 1 : 'nieuws' }; // cat or sub cat
         let tags = { 0 : 'planet', 1 : 'world'};
         let orderby = 'post_date';//$('#loopcontainer').attr('data-orderby');
         let order = 'DESC'; //$('#loopcontainer').attr('data-order');
         let amount = 1;// $('#loopcontainer').data('ppp');
 
-
+        if( $('body .wpajaxbundle.button').parent().find('.container').data('taxterms').length > 0 ){
+          let txt = $('body .wpajaxbundle.button').parent().find('.container').data('taxterms').split(',');
+          terms = txt;
+        }
+        if( $('body .wpajaxbundle.button').parent().find('.container').data('tags').length > 0 ){
+          let tgs = $('body .wpajaxbundle.button').parent().find('.container').data('tags').split(',');
+          tags = tgs;
+        }
 
         jQuery.ajax({
           type: "POST",
@@ -53,6 +60,9 @@ jQuery(function($) {
 
   }
 
-  getPostData();
+  $('body').on( 'click', '.wpajaxbundle.button', function(){
+    getPostData();
+  });
+
 
 });

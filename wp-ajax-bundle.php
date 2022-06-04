@@ -105,5 +105,42 @@ class WPAjaxBundle{
   }
 
 }
-
 new WPAjaxBundle();
+
+
+
+
+// Shortcode class
+class WPAjaxBundleShortcodes{
+
+  public function __construct() {
+
+    add_shortcode('wpajaxposts', array( $this, 'wpajax_shortcode') );
+
+  }
+
+  // Shortcode example
+  public function wpajax_shortcode($atts, $content = null) {
+
+    $default = array(
+        'taxonomy' => 'category', // {0: 'category'}
+        'taxterms' => '', // { 0: 'blog'}
+        'tags' => '', // { 0: 'planet',1: 'earth'}
+    );
+    $att = shortcode_atts($default, $atts);
+    $content = do_shortcode($content);
+
+    return '<div class="section-inner"><div class="post-meta-wrapper"><div class="container" data-taxterms="'.$att['taxterms'].'" data-tags="'.$att['tags'].'"></div><div class="wpajaxbundle button">'.$content.'</div></div></div>';
+    /*
+    $default = array(
+        'link' => '#',
+        'pretext' => '',
+    );
+    $a = shortcode_atts($default, $atts);
+    $content = do_shortcode($content);
+    return '<div class="section-inner"><div class="post-meta-wrapper">'.($a['pretext']).' <a href="'.($a['link']).'" style="color: blue">'.$content.'</a></div></div>';
+    */
+  }
+
+}
+new WPAjaxBundleShortcodes();
