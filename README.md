@@ -1,2 +1,2 @@
 # wp-ajax-bundle
-Ajax listing and filtering
+WP plugin for frontend development with ajax
