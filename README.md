@@ -8,5 +8,6 @@ retrieve posts from category (taxonomy category slug) including with tags (taxon
 - [x] shortcode for test button with console log output
 
 ### Next
+- [ ] setup basic result view
 - [ ] dynamically change categories and tags and parse new requests
 Includes category/tag select menu's from shortcode settings
