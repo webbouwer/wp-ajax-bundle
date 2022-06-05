@@ -76,19 +76,37 @@ jQuery(function($) {
   }
 
 
+  var reqvars;
+
+  function collectRequestData(){
+
+    // request arguments
+    reqvars = {
+      //'tax1': 'category',
+      //'terms1': { 0: 'blog', 1: 'nieuws'},
+      //'tax2': 'post_tag',
+      'terms2': { 0: 'planet', 1: 'universe'},
+      'ppp': 2
+    };
+
+  }
 
   $('body').on( 'click', '.wpajaxbundle.button', function(){
+      collectRequestData();
+      getPostData(reqvars);
+  });
 
-      // request arguments
-      let vars = {
-        //'tax1': 'category',
-        //'terms1': { 0: 'blog', 1: 'nieuws'},
-        //'tax2': 'post_tag',
-        'terms2': { 0: 'planet', 1: 'universe'},
-        'ppp': 2
-      };
+  // onscroll load more
+  $(document).on('scroll', function() {
+    var scrollHeight = $(document).height();
+    var scrollPosition = $(window).height() + $(window).scrollTop();
 
-      getPostData(vars);
+    if ((scrollHeight - scrollPosition) / scrollHeight <= 0.01 ) {
+      if( $('body').find('.wpajaxbundle.button').length > 0 ){
+        collectRequestData();
+        getPostData(reqvars);
+      }
+    }
 
   });
 
