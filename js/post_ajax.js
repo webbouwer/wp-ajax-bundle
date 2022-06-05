@@ -56,13 +56,15 @@ jQuery(function($) {
       },
       success: function(response) {
         setPostsHTML( response ); // JSON.stringify(response)
+        if (response.length >= args.ppp) {
+          pullflag = true; // if last result no pull again
+        }
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         //Error
       },
       timeout: 60000
     });
-    pullflag = true;
     return false;
 
   }
@@ -78,7 +80,7 @@ jQuery(function($) {
 
   var reqvars;
 
-  function collectRequestData(){
+  function doRequestData(){
 
     // request arguments
     reqvars = {
@@ -89,11 +91,12 @@ jQuery(function($) {
       'ppp': 2
     };
 
+    getPostData(reqvars);
+
   }
 
   $('body').on( 'click', '.wpajaxbundle.button', function(){
-      collectRequestData();
-      getPostData(reqvars);
+      doRequestData();
   });
 
   // onscroll load more
@@ -103,8 +106,7 @@ jQuery(function($) {
 
     if ((scrollHeight - scrollPosition) / scrollHeight <= 0.01 ) {
       if( $('body').find('.wpajaxbundle.button').length > 0 ){
-        collectRequestData();
-        getPostData(reqvars);
+        doRequestData();
       }
     }
 
