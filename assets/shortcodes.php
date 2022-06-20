@@ -20,7 +20,12 @@ class WPAjaxBundleShortcodes{
     $att = shortcode_atts($default, $atts);
     $content = do_shortcode($content);
 
-    return '<div class="section-inner"><div class="post-meta-wrapper"><div class="container" data-taxterms="'.$att['taxterms'].'" data-tags="'.$att['tags'].'"></div><div class="wpajaxbundle button">'.$content.'</div></div></div>';
+    $button = '';
+    if($att['button'] != 'hidden'){
+      $button = '<div class="wpajaxbundle button">'.$content.'</div>'; 
+    }
+
+    return '<div class="section-inner"><div class="post-meta-wrapper"><div class="container" data-taxterms="'.$att['taxterms'].'" data-tags="'.$att['tags'].'"></div>'.$button.'</div></div>';
 
   }
 

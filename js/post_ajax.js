@@ -2,6 +2,8 @@ jQuery(function($) {
 
   let pullpage = 0; // starts onload
   let pullflag = true;
+  let reqvars;
+
 
   // prepare an object with default request variables
   let data_args_default = {
@@ -71,14 +73,24 @@ jQuery(function($) {
 
   function setPostsHTML( result ){
     console.log( result );
+
+    let t = 0; // timer for smooth slowed-down slide-in
     $.each( result, function( idx, post){
-      let html = '<div id="post-'+post.id+'">'+post.title+'</div>';
-      $('body').find('.wpajaxbundle.button').parent().find('.container').append(html);
+      let obj = $('<div id="post-'+post.id+'">'+post.title+'</div>').slideUp(300);
+      $('body').find('.wpajaxbundle.button').parent().find('.container').append(obj);
+      // slowed-down slide-in
+      setTimeout(function(){
+        obj.slideDown(300);
+      },t);
+      t=(t+200);
     });
+
+    // hide button if less data then page amount found
+    if( result.length < reqvars.ppp && $('.wpajaxbundle.button').length > 0){
+      $('.wpajaxbundle.button').slideUp();
+    }
   }
 
-
-  var reqvars;
 
   function doRequestData(){
 
@@ -110,6 +122,10 @@ jQuery(function($) {
       }
     }
 
+  });
+
+  $(document).ready(function(){
+    doRequestData();
   });
 
 });

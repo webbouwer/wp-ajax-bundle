@@ -41,6 +41,7 @@
        'nonce' => wp_create_nonce('getPostData_nonce'),
        ));
      }
+     
      public function getPostData_ajax_script(){
        // secure with local script file assigned
        wp_enqueue_script( 'ajax-script', plugins_url( 'js/post_ajax.js', __FILE__ ), array( 'jquery' ), null, true );
