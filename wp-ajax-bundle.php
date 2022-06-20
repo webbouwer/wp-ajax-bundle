@@ -41,7 +41,7 @@
        'nonce' => wp_create_nonce('getPostData_nonce'),
        ));
      }
-     
+
      public function getPostData_ajax_script(){
        // secure with local script file assigned
        wp_enqueue_script( 'ajax-script', plugins_url( 'js/post_ajax.js', __FILE__ ), array( 'jquery' ), null, true );
@@ -70,6 +70,7 @@
        $orderby  = $data['orderby'];
        $order = $data['order'];
        $amount  = $data['ppp'];
+
        $paged = (isset($paged) || !(empty($paged))) ? $paged : 1;
 
        $tax_query = array('relation' => $relation);
@@ -114,6 +115,7 @@
             $post['id'] = get_the_ID();
             $post['title'] = get_the_title();
             $post['excerpt'] = get_the_excerpt();
+            $post['link'] = get_the_permalink();
             $result[] = $post;
          endwhile;
        endif;
