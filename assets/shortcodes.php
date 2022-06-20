@@ -15,12 +15,14 @@ class WPAjaxBundleShortcodes{
 
     // [wpajaxposts tax1="category" terms1="blog" tax2="post_tag" terms2="planet,earth" ppp="2" button="hidden"]Ajax load test[/wpajaxposts]
     $default = array(
-        'ppp' => '',
         'button' => '',
         'tax1' => '', // {0: 'category'}
         'terms1' => '', // { 0: 'blog'}
         'tax2' => '', // { 0: 'planet',1: 'earth'}
         'terms2' => '', // { 0: 'planet',1: 'earth'}
+        'orderby' => '',
+        'order' => '',
+        'ppp' => '',
     );
     $att = shortcode_atts($default, $atts);
     $content = do_shortcode($content);

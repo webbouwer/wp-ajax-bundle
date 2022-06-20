@@ -37,15 +37,6 @@ jQuery(function($) {
       'ppp': 2
     };
 
-    $relation = $data['relation'];
-    $tax1 = $data['tax1'];          // category array..
-    $terms1  = $data['terms1'];     // slugs array..
-    $tax2 = $data['tax2'];          // category array..
-    $terms2  = $data['terms2'];      //$_POST['data']['slug']; // slugs array..
-    $orderby  = $data['orderby'];
-    $order = $data['order'];
-    $amount  = $data['ppp'];
-
     if( data.tax1 != '' ){
       reqvars.tax1 = data.tax1;
     }
@@ -142,12 +133,36 @@ jQuery(function($) {
   }
 
   function setPostsHTML( result ){
-    console.log( result );
 
-    let t = 0; // timer for smooth slowed-down slide-in
+    //console.log( result );
+    //let t = 0; // timer for smooth slowed-down slide-in
+
     $.each( result, function( idx, post){
-      let obj = $('<div id="post-'+post.id+'"><h2><a href="'+post.link+'">'+post.title+'</a></h2></div>');
+
+      let obj = $('<div id="post-'+post.id+'"></div>');
+
+      obj.attr('data-tags', post.tags.toString() );
+      obj.attr('data-cats', post.cats.toString() );
+
+      let title = $('<h2><a href="'+post.link+'">'+post.title+'</a></h2>');
+      obj.append(title);
+      let excerpt = $('<div class="excerpt">'+post.excerpt+'</div>');
+      obj.append(excerpt);
+
+      let cats = $('<div class="cats" />');
+      for(c=0;c<post.cats.length;c++){
+        cats.append('<span>'+post.cats[c])+'</span>';
+      }
+      obj.append(cats);
+
+      let tags = $('<div class="tags" />');
+      for(s=0;s<post.tags.length;s++){
+        tags.append('<span>'+post.tags[s])+'</span>';
+      }
+      obj.append(tags);
+
       $('body').find('.wpajaxbundle .container').append(obj);
+
       /*let obj = $('<div id="post-'+post.id+'">'+post.title+'</div>').hide();//.slideUp(300);
       $('body').find('.wpajaxbundle.button').parent().find('.container').append(obj);
       // slowed-down slide-in

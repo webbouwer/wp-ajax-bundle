@@ -103,6 +103,8 @@
 
        $query = $get_post_args;
 
+       // ? https://wordpress.stackexchange.com/questions/173949/order-posts-by-tags-count
+
        // run query with requested args
        $postdata = new WP_Query($get_post_args);
 
@@ -111,12 +113,46 @@
        // check and bundle needed postdata returned
        if($postdata->have_posts()) :
          while($postdata->have_posts()) : $postdata->the_post();
-            $post = [];
-            $post['id'] = get_the_ID();
-            $post['title'] = get_the_title();
-            $post['excerpt'] = get_the_excerpt();
-            $post['link'] = get_the_permalink();
-            $result[] = $post;
+
+            $post = get_post( get_the_ID() );
+
+
+            $fulltext = $post->post_content; // str_replace( '<!--more-->', '',);
+
+            libxml_use_internal_errors(true); // use this to prevent warning messages from displaying because of the bad HTML
+            $doc = new DOMDocument();
+            $doc->loadHTML(mb_convert_encoding($fulltext, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NODEFDTD);
+            //$doc->loadHTML( utf8_decode( $fulltext ) );
+            $doc->encoding = 'utf-8';
+            $doc->normalizeDocument();
+            $content = $doc->saveHTML();
+
+            $htmlbody = apply_filters('the_content', $content );
+            $content = apply_filters('the_content', $fulltext );
+
+
+            $result[] = array(
+                    'id' => get_the_ID(),
+                    'type' => $post->post_type,
+                    'link' => get_the_permalink(),
+                    'title' => get_the_title(),
+                    'slug' => $post->post_name,
+
+                    'image' => get_the_post_thumbnail( $post->id, 'large'),
+                    'imgurl' => wp_get_attachment_url( get_post_thumbnail_id( $post->id, 'large' ) ),
+                    'imgorient' => check_image_orientation( $post->id ),
+                    'excerpt' => get_the_excerpt(),
+                    'content' => $content,
+                    'htmlbody' => $htmlbody,
+                    'cats' => wp_get_post_terms( get_the_ID(), 'category', array("fields" => "slugs")),
+                    'tags' => wp_get_post_terms( get_the_ID(), 'post_tag', array("fields" => "slugs")),
+                    'date' => get_the_date(),
+                    'timestamp' => strtotime(get_the_date()),
+                    'author' => get_the_author(),
+                    'custom_field_keys' => get_post_custom_keys()
+
+                );
+
          endwhile;
        endif;
 
@@ -130,6 +166,26 @@
 
  }
  new WPAjaxBundle();
+
+
+ // image orient
+ function check_image_orientation($pid){
+ 	$orient = 'landscape';
+     $image = wp_get_attachment_image_src( get_post_thumbnail_id($pid), '');
+     if($image){
+         $image_w = $image[1];
+         $image_h = $image[2];
+         if ($image_w > $image_h) {
+             $orient = 'landscape';
+         }elseif ($image_w == $image_h) {
+             $orient = 'square';
+         }else {
+             $orient = 'portrait';
+         }
+     }
+     return $orient;
+ }
+
 
 /*
 // main class
