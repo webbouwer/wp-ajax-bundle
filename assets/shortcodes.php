@@ -20,9 +20,11 @@ class WPAjaxBundleShortcodes{
         'terms1' => '', // { 0: 'blog'}
         'tax2' => '', // { 0: 'planet',1: 'earth'}
         'terms2' => '', // { 0: 'planet',1: 'earth'}
+        'relation' => 'AND',
         'orderby' => '',
         'order' => '',
-        'ppp' => '',
+        'ppp' => '10',
+        'load' => '',
     );
     $att = shortcode_atts($default, $atts);
     $content = do_shortcode($content);
@@ -32,8 +34,11 @@ class WPAjaxBundleShortcodes{
       $button = '<div class="wpajaxbundle button">'.$content.'</div>';
     }
     $this->nr++; // id_'.$this->nr.'
-    $html = '<div id="wpajaxbundle" class="wpajaxbundle section-inner" data-ppp="'.$att['ppp'].'" data-tax1="'.$att['tax1'].'" data-terms1="'.$att['terms1'].'" data-tax2="'.$att['tax2'].'" data-terms2="'.$att['terms2'].'">
-    <div class="container"></div>'.$button.'</div>';
+    $html = '<div id="wpajaxbundle" class="wpajaxbundle section-inner"'
+    .' data-tax1="'.$att['tax1'].'" data-terms1="'.$att['terms1'].'" data-tax2="'.$att['tax2'].'" data-terms2="'.$att['terms2'].'"'
+    .' data-relation="'.$att['relation'].'" data-orderby="'.$att['orderby'].'" data-order="'.$att['order'].'"'
+    .' data-ppp="'.$att['ppp'].'" data-load="'.$att['load'].'">'
+    .'<div class="container"></div>'.$button.'</div>';
     //print_r($att);
     return $html;
 

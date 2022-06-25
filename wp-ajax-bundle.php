@@ -73,6 +73,8 @@
 
        $paged = (isset($paged) || !(empty($paged))) ? $paged : 1;
 
+       // .. https://wordpress.stackexchange.com/questions/313622/nested-tax-query-that-allows-specified-categories-or-tags-but-not-other-categor
+
        $tax_query = array('relation' => $relation);
        if (isset($tax1) && isset($terms1) && $terms1 != '' && count($terms1) > 0){
          $tax_query[] =  array(
@@ -88,6 +90,16 @@
            'terms' => $terms2
          );
        }
+       /* related to post
+       if( $tax2 == 'post_tag' ){
+         $custom_taxterms = wp_get_object_terms($post->ID, 'post_tag', array('fields' => 'slugs'));
+         $tax_query[] = array(
+            'taxonomy' => 'post_tag',
+            'field' => 'slug',
+            'terms' => $custom_taxterms
+          );
+        }
+        */
 
        // complete query args bundle
        $get_post_args = array(
@@ -96,7 +108,7 @@
          'posts_per_page'   => $amount,     // amount of post each request(page)
          'orderby'          => $orderby,    // 'menu_order', // date
          'order'            => $order,      //'ASC', // desc
-         'suppress_filters' => true,        // remove plugin ordenings (?)
+         'suppress_filters' => false,        // remove plugin ordenings (?)
          'paged'            => $paged,      // loaded requests (pages)
          'tax_query'        => $tax_query   // taxonomy request variables array
        );
@@ -105,8 +117,11 @@
 
        // ? https://wordpress.stackexchange.com/questions/173949/order-posts-by-tags-count
 
+       // >> https://wordpress.stackexchange.com/questions/326497/how-to-display-related-posts-based-on-number-of-taxonomy-terms-matched
+
        // run query with requested args
-       $postdata = new WP_Query($get_post_args);
+       $postdata = new WP_Query($query);
+
 
        $result = [];
 

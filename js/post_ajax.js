@@ -1,10 +1,11 @@
 jQuery(function($) {
 
+  $(document).ready(function(){
+
   let pullpage = 0; // starts onload
   let pullflag = true;
   let pullend = false;
   let reqvars;
-
 
   // prepare an object with default request variables
   let data_args_default = {
@@ -16,7 +17,7 @@ jQuery(function($) {
       'tax2': 'post_tag', // default post_tag
       'terms2': {}, //slugs
       'orderby': 'post_date',
-      'order': 'DESC',
+      'order': 'ASC',
       'ppp': 1,
       'page': pullpage
   };
@@ -27,12 +28,13 @@ jQuery(function($) {
     var data = $('#wpajaxbundle').data();
 
     reqvars = {
+      'posttype' : 'post',
       'tax1': 'category', //
       'terms1': 'uncategorized', //{ 0: 'blog', 1: 'nieuws'},
       'tax2': '', //'post_tag',
       'terms2': '', //{ 0: 'planet', 1: 'universe'},
       'relation' : 'AND',
-      'orderby' : 'date',
+      'orderby' : 'post_date',
       'order' : 'ASC',
       'ppp': 2
     };
@@ -69,6 +71,15 @@ jQuery(function($) {
         reqvars.terms2 = obj;
       }
     }
+    if( data.relation != '' ){
+      reqvars.relation = data.relation;
+    }
+    if( data.orderby != '' ){
+      reqvars.orderby = data.orderby;
+    }
+    if( data.order != '' ){
+      reqvars.order = data.order;
+    }
     if( data.ppp != '' ){
       reqvars.ppp = data.ppp;
     }
@@ -77,6 +88,8 @@ jQuery(function($) {
     getPostData(reqvars);
 
   }
+
+
 
   function getPostData( args = false ) {
 
@@ -87,7 +100,6 @@ jQuery(function($) {
         pullpage++;
 
         reqdata['page'] = pullpage; // set query pagenumber
-
         if(args){ // args from the trigger function (load/button/scroll)
           for (const key in data_args_default) {
               if( args[key] ) {
@@ -95,10 +107,8 @@ jQuery(function($) {
               }
           }
         }
-
         getPosts( reqdata );
-        console.log( reqdata );
-
+        //console.log( reqdata );
     }
 
   }
@@ -139,10 +149,17 @@ jQuery(function($) {
 
     $.each( result, function( idx, post){
 
+      let objfilterclasses = 'item';
       let obj = $('<div id="post-'+post.id+'"></div>');
 
       obj.attr('data-tags', post.tags.toString() );
       obj.attr('data-cats', post.cats.toString() );
+
+      $(post.tags).each(function( x , tag ){
+        objfilterclasses += ' '+tag;
+      });
+
+      obj.attr('class', objfilterclasses );
 
       let title = $('<h2><a href="'+post.link+'">'+post.title+'</a></h2>');
       obj.append(title);
@@ -170,6 +187,13 @@ jQuery(function($) {
         obj.slideDown(300);
       },t);
       t=(t+50);*/
+      if( $('#wpajaxbundle').data('load') == 'all'){
+        /* repeat ppp load automaticaly untill all is loaded  */
+        setTimeout(function(){
+          doRequestData();
+        }, 100);
+      }
+
     });
 
     // hide button if less data then page amount found
@@ -200,8 +224,7 @@ jQuery(function($) {
 
   });
 
-  $(document).ready(function(){
-    doRequestData();
+  doRequestData();
   });
 
 });
