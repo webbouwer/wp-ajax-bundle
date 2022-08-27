@@ -13,9 +13,10 @@ class WPAjaxBundleShortcodes{
   // Shortcode function
   public function wpajax_shortcode($atts, $content = null) {
 
-    // [wpajaxposts tax1="category" terms1="blog" tax2="post_tag" terms2="planet,earth" ppp="2" button="hidden"]Ajax load test[/wpajaxposts]
+    // [wpajaxposts posttype='post' tax1="category" terms1="blog" tax2="post_tag" terms2="planet,earth" ppp="2" button="hidden"]Ajax load test[/wpajaxposts]
     $default = array(
-        'button' => '',
+        'posttype' => 'post', // type of post (post, all <custom>)
+        'button' => '', // default visible or set button='hidden'
         'tax1' => '', // {0: 'category'}
         'terms1' => '', // { 0: 'blog'}
         'tax2' => '', // { 0: 'planet',1: 'earth'}
@@ -34,7 +35,7 @@ class WPAjaxBundleShortcodes{
       $button = '<div class="wpajaxbundle button">'.$content.'</div>';
     }
     $this->nr++; // id_'.$this->nr.'
-    $html = '<div id="wpajaxbundle" class="wpajaxbundle section-inner"'
+    $html = '<div id="wpajaxbundle" class="wpajaxbundle section-inner" data-posttype="'.$att['posttype'].''
     .' data-tax1="'.$att['tax1'].'" data-terms1="'.$att['terms1'].'" data-tax2="'.$att['tax2'].'" data-terms2="'.$att['terms2'].'"'
     .' data-relation="'.$att['relation'].'" data-orderby="'.$att['orderby'].'" data-order="'.$att['order'].'"'
     .' data-ppp="'.$att['ppp'].'" data-load="'.$att['load'].'">'

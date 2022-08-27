@@ -39,6 +39,10 @@ jQuery(function($) {
       'ppp': 2
     };
 
+    if( data.posttype != '' ){
+      reqvars.posttype = data.posttype;
+    }
+
     if( data.tax1 != '' ){
       reqvars.tax1 = data.tax1;
     }
