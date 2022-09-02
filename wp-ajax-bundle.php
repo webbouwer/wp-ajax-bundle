@@ -18,7 +18,7 @@
  // main class
  class WPAjaxBundle{
 
-    var $query;
+    var $query; 
 
     public function __construct() {
 
@@ -147,7 +147,7 @@
 
 
             $result[] = array(
-              
+
                     'id' => get_the_ID(),
                     'type' => $post->post_type,
                     'link' => get_the_permalink(),

@@ -35,7 +35,7 @@ class WPAjaxBundleShortcodes{
       $button = '<div class="wpajaxbundle button">'.$content.'</div>';
     }
     $this->nr++; // id_'.$this->nr.'
-    $html = '<div id="wpajaxbundle" class="wpajaxbundle section-inner" data-posttype="'.$att['posttype'].''
+    $html = '<div id="wpajaxbundle" class="wpajaxbundle section-inner" data-posttype="'.$att['posttype'].'"'
     .' data-tax1="'.$att['tax1'].'" data-terms1="'.$att['terms1'].'" data-tax2="'.$att['tax2'].'" data-terms2="'.$att['terms2'].'"'
     .' data-relation="'.$att['relation'].'" data-orderby="'.$att['orderby'].'" data-order="'.$att['order'].'"'
     .' data-ppp="'.$att['ppp'].'" data-load="'.$att['load'].'">'

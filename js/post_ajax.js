@@ -1,6 +1,6 @@
 jQuery(function($) {
 
-  $(document).ready(function(){
+
 
   let pullpage = 0; // starts onload
   let pullflag = true;
@@ -23,6 +23,7 @@ jQuery(function($) {
   };
 
   function doRequestData(){
+
 
     // request arguments
     var data = $('#wpajaxbundle').data();
@@ -97,6 +98,7 @@ jQuery(function($) {
 
   function getPostData( args = false ) {
 
+
     let reqdata = data_args_default; // set default variables
 
     if (pullflag) { // if no requests active
@@ -118,7 +120,7 @@ jQuery(function($) {
   }
 
   function getPosts( args ){
-
+    
     jQuery.ajax({
       type: "POST",
       url: ajax.url,
@@ -129,6 +131,7 @@ jQuery(function($) {
         data: args
       },
       success: function(response) {
+
         //alert( JSON.stringify(args) );
         setPostsHTML( response ); // JSON.stringify(response)
         if (response.length >= args.ppp) {
@@ -140,7 +143,7 @@ jQuery(function($) {
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         //Error
       },
-      timeout: 60000
+      timeout: 6000
     });
     return false;
 
@@ -228,7 +231,9 @@ jQuery(function($) {
 
   });
 
-  doRequestData();
+  $(document).ready(function(){
+
+    doRequestData();
   });
 
 });
