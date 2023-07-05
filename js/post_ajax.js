@@ -220,11 +220,13 @@ jQuery(function($) {
 
   // onscroll load more
   $(document).on('scroll', function() {
+    var container = $('#wpajaxbundle');
     var scrollHeight = $(document).height();
     var scrollPosition = $(window).height() + $(window).scrollTop();
 
-    if ((scrollHeight - scrollPosition) / scrollHeight <= 0.01 ) {
-      if( !pullend ){
+    //if ((scrollHeight - scrollPosition) / scrollHeight <= 0.01 ) { // for full page end
+    if ( scrollPosition > (container.offset().top + container.height() ) ) { // on container end
+       if( !pullend ){
         doRequestData();
       }
     }
