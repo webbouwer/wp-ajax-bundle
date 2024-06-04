@@ -62,6 +62,7 @@
        // collect data from post request
        $paged  = $data['page'];
        $posttype  = $data['posttype'];
+       $display = $data['display'];
        $relation = $data['relation'];
        $tax1 = $data['tax1'];          // category array..
        $terms1  = $data['terms1'];     // slugs array..
@@ -100,7 +101,9 @@
           );
         }
         */
+		 
 
+		 
        // complete query args bundle
        $get_post_args = array(
          'post_type'        => $posttype,   // post type
@@ -131,9 +134,10 @@
 
             $post = get_post( get_the_ID() );
 
-
-            $fulltext = $post->post_content; // str_replace( '<!--more-->', '',);
-
+			$content = $post->post_excerpt; 
+            $htmlbody = $post->post_content; // str_replace( '<!--more-->', '',);
+			/*
+			$fulltext = $post->post_content; // str_replace( '<!--more-->', '',);
             libxml_use_internal_errors(true); // use this to prevent warning messages from displaying because of the bad HTML
             $doc = new DOMDocument();
             $doc->loadHTML(mb_convert_encoding($fulltext, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NODEFDTD);
@@ -141,9 +145,10 @@
             $doc->encoding = 'utf-8';
             $doc->normalizeDocument();
             $content = $doc->saveHTML();
-
+			
             $htmlbody = apply_filters('the_content', $content );
             $content = apply_filters('the_content', $fulltext );
+			*/
 
 
             $result[] = array(
@@ -151,6 +156,7 @@
                     'id' => get_the_ID(),
                     'type' => $post->post_type,
                     'link' => get_the_permalink(),
+                    'display' => $data['display'],
                     'title' => get_the_title(),
                     'slug' => $post->post_name,
 

@@ -10,6 +10,7 @@ jQuery(function($) {
   // prepare an object with default request variables
   let data_args_default = {
       'posttype': 'post',
+	  'display': '',
       'postid': false, // for direct post requests
       'tax1': 'category', // main taxonomy (custom), default category
       'terms1': {}, // slugs
@@ -27,15 +28,16 @@ jQuery(function($) {
 
     // request arguments
     var data = $('#wpajaxbundle').data();
-
+    console.log(data);
     reqvars = {
       'posttype' : 'post',
-      'tax1': 'category', //
-      'terms1': 'uncategorized', //{ 0: 'blog', 1: 'nieuws'},
+      'tax1': '', // category
+      'terms1': '', // uncategorized { 0: 'blog', 1: 'nieuws'},
       'tax2': '', //'post_tag',
       'terms2': '', //{ 0: 'planet', 1: 'universe'},
-      'relation' : 'AND',
+      'relation' : '', // AND
       'orderby' : 'post_date',
+      'display' : '',
       'order' : 'ASC',
       'ppp': 2
     };
@@ -87,6 +89,10 @@ jQuery(function($) {
     }
     if( data.ppp != '' ){
       reqvars.ppp = data.ppp;
+    }
+	  
+	if( data.display != '' ){
+      reqvars.display = data.display;
     }
 
     //alert(JSON.stringify(reqvars));
@@ -142,6 +148,7 @@ jQuery(function($) {
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         //Error
+        console.log( textStatus );
       },
       timeout: 6000
     });
@@ -170,8 +177,13 @@ jQuery(function($) {
 
       let title = $('<h2><a href="'+post.link+'">'+post.title+'</a></h2>');
       obj.append(title);
-      let excerpt = $('<div class="excerpt">'+post.excerpt+'</div>');
-      obj.append(excerpt);
+		
+	  let content = $('<div class="content">'+post.excerpt+'</div>');
+	  if( post.display != 'excerpt' ){
+      	content = $('<div class="excerpt">'+post.htmlbody+'</div>');
+	  }
+      obj.append(content);
+     
 
       let cats = $('<div class="cats" />');
       for(c=0;c<post.cats.length;c++){
@@ -210,9 +222,6 @@ jQuery(function($) {
 
     // trigger isotope
   }
-
-
-
 
   $('body').on( 'click', '.wpajaxbundle.button', function(){
       doRequestData();

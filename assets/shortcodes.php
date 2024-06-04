@@ -5,9 +5,7 @@ class WPAjaxBundleShortcodes{
   private $nr = 0;
 
   public function __construct() {
-
     add_shortcode('wpajaxposts', array( $this, 'wpajax_shortcode') );
-
   }
 
   // Shortcode function
@@ -16,6 +14,7 @@ class WPAjaxBundleShortcodes{
     // [wpajaxposts posttype='post' tax1="category" terms1="blog" tax2="post_tag" terms2="planet,earth" ppp="2" button="hidden"]Ajax load test[/wpajaxposts]
     $default = array(
         'posttype' => 'post', // type of post (post, all <custom>)
+        'display' => '',
         'button' => '', // default visible or set button='hidden'
         'tax1' => '', // {0: 'category'}
         'terms1' => '', // { 0: 'blog'}
@@ -34,12 +33,17 @@ class WPAjaxBundleShortcodes{
     if($att['button'] != 'hidden'){
       $button = '<div class="wpajaxbundle button">'.$content.'</div>';
     }
+	
+	if($att['display'] == ''){
+      $att['display'] = 'excerpt';
+    }
+	  
     $this->nr++; // id_'.$this->nr.'
     $html = '<div id="wpajaxbundle" class="wpajaxbundle section-inner" data-posttype="'.$att['posttype'].'"'
     .' data-tax1="'.$att['tax1'].'" data-terms1="'.$att['terms1'].'" data-tax2="'.$att['tax2'].'" data-terms2="'.$att['terms2'].'"'
     .' data-relation="'.$att['relation'].'" data-orderby="'.$att['orderby'].'" data-order="'.$att['order'].'"'
-    .' data-ppp="'.$att['ppp'].'" data-load="'.$att['load'].'">'
-    .'<div class="container"></div>'.$button.'</div>';
+    .' data-ppp="'.$att['ppp'].'" data-display="'.$att['display'].'" data-load="'.$att['load'].'">'
+    .'<div class="container"></div>'.$button.'</div>'; 
     //print_r($att);
     return $html;
 
