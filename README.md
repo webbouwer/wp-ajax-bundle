@@ -10,5 +10,6 @@ retrieve posts from category (taxonomy category slug) including with tags (taxon
 - [x] setup basic result view
 
 ### Next
+- [ ] Use display and posttype variables for output (theme) options (ie. calendar display)
 - [ ] dynamically change categories and tags and parse new requests
 Includes category/tag select menu's from shortcode settings  
