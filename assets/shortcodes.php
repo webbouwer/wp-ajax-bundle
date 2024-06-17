@@ -33,8 +33,13 @@ class WPAjaxBundleShortcodes{
     if($att['button'] != 'hidden'){
       $button = '<div class="wpajaxbundle button">'.$content.'</div>';
     }
+
+    $loader = '';
+    if($att['loader'] != 'hidden'){
+      $loader = '<div class="wpajaxbundle loader"><span>Loading</span></div>';
+    }
 	
-	if($att['display'] == ''){
+	  if($att['display'] == ''){
       $att['display'] = 'excerpt';
     }
 	  
@@ -43,7 +48,7 @@ class WPAjaxBundleShortcodes{
     .' data-tax1="'.$att['tax1'].'" data-terms1="'.$att['terms1'].'" data-tax2="'.$att['tax2'].'" data-terms2="'.$att['terms2'].'"'
     .' data-relation="'.$att['relation'].'" data-orderby="'.$att['orderby'].'" data-order="'.$att['order'].'"'
     .' data-ppp="'.$att['ppp'].'" data-display="'.$att['display'].'" data-load="'.$att['load'].'">'
-    .'<div class="container"></div>'.$button.'</div>'; 
+    .'<div class="itemcontainer"></div>'.$button.''.$loader.'</div>'; 
     //print_r($att);
     return $html;
 

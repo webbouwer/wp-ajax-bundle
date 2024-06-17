@@ -26,9 +26,12 @@ jQuery(function($) {
   function doRequestData(){
 
 
+    if( $('#wpajaxbundle').length > 0){
+
     // request arguments
     var data = $('#wpajaxbundle').data();
-    console.log(data);
+
+    //console.log(data);
     reqvars = {
       'posttype' : 'post',
       'tax1': '', // category
@@ -42,7 +45,7 @@ jQuery(function($) {
       'ppp': 2
     };
 
-    if( data.posttype != '' ){
+    if( data.posttype != '' ){ 
       reqvars.posttype = data.posttype;
     }
 
@@ -98,7 +101,9 @@ jQuery(function($) {
     //alert(JSON.stringify(reqvars));
     getPostData(reqvars);
 
-  }
+    }
+
+  } 
 
 
 
@@ -140,6 +145,11 @@ jQuery(function($) {
 
         //alert( JSON.stringify(args) );
         setPostsHTML( response ); // JSON.stringify(response)
+
+        if( $('.wpajaxbundle.loader').length > 0){
+          $('.wpajaxbundle.loader').fadeOut();
+        }
+
         if (response.length >= args.ppp) {
           pullflag = true; // if ppp count result wait for pull again
         }else{
@@ -148,7 +158,7 @@ jQuery(function($) {
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         //Error
-        console.log( textStatus );
+        console.log( textStatus ); 
       },
       timeout: 6000
     });
@@ -197,10 +207,10 @@ jQuery(function($) {
       }
       obj.append(tags);
 
-      $('body').find('.wpajaxbundle .container').append(obj);
+      $('body').find('.wpajaxbundle .itemcontainer').append(obj);
 
       /*let obj = $('<div id="post-'+post.id+'">'+post.title+'</div>').hide();//.slideUp(300);
-      $('body').find('.wpajaxbundle.button').parent().find('.container').append(obj);
+      $('body').find('.wpajaxbundle.button').parent().find('.itemcontainer').append(obj);
       // slowed-down slide-in
       setTimeout(function(){
         obj.slideDown(300);
@@ -229,15 +239,24 @@ jQuery(function($) {
 
   // onscroll load more
   $(document).on('scroll', function() {
-    var container = $('#wpajaxbundle');
-    var scrollHeight = $(document).height();
-    var scrollPosition = $(window).height() + $(window).scrollTop();
 
-    //if ((scrollHeight - scrollPosition) / scrollHeight <= 0.01 ) { // for full page end
-    if ( scrollPosition > (container.offset().top + container.height() ) ) { // on container end
-       if( !pullend ){
-        doRequestData();
+    if( $('#wpajaxbundle').length > 0 && pullend != true ){
+
+      var container = $('#wpajaxbundle');
+      var scrollHeight = $(document).height();
+      var scrollPosition = $(window).height() + $(window).scrollTop();
+
+      //if ((scrollHeight - scrollPosition) / scrollHeight <= 0.01 ) { // for full page end
+      if ( scrollPosition > (container.offset().top + container.height() ) ) { // on container end
+        if( !pullend ){
+          
+          if( $('.wpajaxbundle.loader').length > 0){
+            $('.wpajaxbundle.loader').fadeIn();
+          }
+          doRequestData();
+        }
       }
+
     }
 
   });
