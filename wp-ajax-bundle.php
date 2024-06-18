@@ -52,6 +52,16 @@ class WPAjaxBundle
     wp_localize_script('ajax-script', 'ajax_data', array(
       'ajaxurl' => admin_url('admin-ajax.php'),
     ));
+
+    //https://github.com/fullcalendar/fullcalendar
+    // https://fullcalendar.io/docs/upgrading-from-v5
+    //https://www.jsdelivr.com/package/npm/fullcalendar
+    //https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js 
+    //wp_enqueue_style('fullcalendar-min-css', 'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css');
+    //wp_enqueue_style('fullcalendar-print-css', 'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.print.css');
+
+    //wp_enqueue_script('fullcalendar-script', 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js', __FILE__, array('jquery'), null, true);
+ 
   }
 
   public function getWPPostData()
@@ -139,21 +149,22 @@ class WPAjaxBundle
 
         $post = get_post(get_the_ID());
 
-        $content = $post->post_excerpt;
+        //$content = $post->post_excerpt;
         $htmlbody = $post->post_content; // str_replace( '<!--more-->', '',);
-        /*
-			$fulltext = $post->post_content; // str_replace( '<!--more-->', '',);
-            libxml_use_internal_errors(true); // use this to prevent warning messages from displaying because of the bad HTML
+        
+			  $fulltext = $post->post_content; // str_replace( '<!--more-->', '',);
+
+          /*  libxml_use_internal_errors(true); // use this to prevent warning messages from displaying because of the bad HTML
             $doc = new DOMDocument();
             $doc->loadHTML(mb_convert_encoding($fulltext, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NODEFDTD);
             //$doc->loadHTML( utf8_decode( $fulltext ) );
             $doc->encoding = 'utf-8';
             $doc->normalizeDocument();
             $content = $doc->saveHTML();
-			
-            $htmlbody = apply_filters('the_content', $content );
-            $content = apply_filters('the_content', $fulltext );
 			*/
+            //$htmlbody = apply_filters('the_content', $content );
+            $content = apply_filters('the_content', $fulltext );
+			
 
 
         $result[] = array(
@@ -176,7 +187,8 @@ class WPAjaxBundle
           'date' => get_the_date(),
           'timestamp' => strtotime(get_the_date()),
           'author' => get_the_author(),
-          'custom_field_keys' => get_post_custom_keys()
+          //'custom_field_keys' => get_post_custom_keys(),
+          'custom_field_values' => get_post_custom( get_the_ID() ),
 
         );
 
@@ -211,103 +223,3 @@ function check_image_orientation($pid)
   }
   return $orient;
 }
-
-
-/*
-// main class
-class WPAjaxBundle{
-
-  public function __construct() {
-
-    // Enqueue the wp ajax php scripts
-    add_action('wp_enqueue_scripts', array( $this, 'getPostData_localize_ajax') );
-    add_action( 'wp_enqueue_scripts', array( $this, 'getPostData_ajax_script' ) );
-    // Enqueue the wp ajax script on the back end (wp-admin)
-    add_action( 'admin_enqueue_scripts', array( $this, 'getPostData_ajax_script' ) );
-    // assign php function for ajax request (bind the nonce)
-    add_action('wp_ajax_getPostDataWP', array( $this, 'getPostDataWP') );
-    add_action('wp_ajax_nopriv_getPostDataWP', array( $this, 'getPostDataWP') );
-
-  }
-
-  public function getPostData_localize_ajax(){
-    // secure with unique id (nonce)
-    wp_localize_script('jquery', 'ajax', array(
-    'url' => admin_url('admin-ajax.php'),
-    'nonce' => wp_create_nonce('getPostData_my_ajax_nonce'),
-    ));
-  }
-  public function getPostData_ajax_script(){
-    // secure with local script file assigned
-    wp_enqueue_script( 'ajax-script', plugins_url( 'js/post_ajax.js', __FILE__ ), array( 'jquery' ), null, true );
-    wp_localize_script( 'ajax-script', 'ajax_data', array(
-    'ajaxurl' => admin_url( 'admin-ajax.php' ),
-    ) );
-  }
-
-  public function getPostDataWP(){
-    // verify nonce
-    if( !wp_verify_nonce($_POST['nonce'], 'getPostData_my_ajax_nonce') ){
-       die('Permission Denied.');
-    }
-    // collect data from post request
-    $paged  = $_POST['data']['page'];
-    $posttype  = $_POST['data']['posttype'];
-    $taxname = $_POST['data']['taxname']; // category array..
-    $terms  = $_POST['data']['termlist']; // slugs array..
-    $tags  = $_POST['data']['taglist']; //$_POST['data']['slug']; // slugs array..
-    $orderby  = $_POST['data']['orderby'];
-    $order = $_POST['data']['order'];
-    $amount  = $_POST['data']['ppp'];
-    $paged = (isset($paged) || !(empty($paged))) ? $paged : 1;
-
-    // define the taxonomy args outside of the WP_Query instantiation
-    // https://wordpress.stackexchange.com/questions/55831/conditional-arguments-for-wp-query-and-tax-query-depending-on-if-somevar-has-a
-    $tax_query = array('relation' => 'AND');
-    if (isset($taxname) && isset($terms) && count($terms) > 0){
-      $tax_query[] =  array(
-      'taxonomy' => $taxname,
-      'field' => 'slug',
-      'terms' => $terms
-      );
-    }
-    if (isset($tags) && $tags != '' && count($tags) > 0){
-      $tax_query[] =  array(
-        'taxonomy' => 'post_tag',
-        'field' => 'slug',
-        'terms' => $tags
-      );
-    }
-
-    // complete query args bundle
-    $get_post_args = array(
-      'post_type'        => $posttype,   // post type
-    	'status'           => 'published', // only published visible
-      'posts_per_page'   => $amount,     // amount of post each request(page)
-      'orderby'          => $orderby,    // 'menu_order', // date
-    	'order'            => $order,      //'ASC', // desc
-    	'suppress_filters' => true,        // remove plugin ordenings (?)
-    	'paged'            => $paged,      // loaded requests (pages)
-      'tax_query'        => $tax_query   // taxonomy request variables array
-    );
-
-    // run query with requested args
-    $postdata = new WP_Query($get_post_args);
-
-    // check postdata returned
-    if($postdata->have_posts()) :
-
-        header('Content-Type: application/json');
-        print json_encode($postdata);
-
-    endif;
-
-    wp_reset_query();
-    wp_die();
-  }
-
-}
-new WPAjaxBundle();
-
-
-*/
