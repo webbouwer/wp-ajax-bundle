@@ -9,7 +9,10 @@ retrieve posts from category (taxonomy category slug) including with tags (taxon
 
 - [x] setup basic result view
 
+- [ ] in progress: Use display and posttype variables for output (theme) options (ie. calendar display)
+
+- [ ] in progress: Fullcalendar display with popup on click (post type event from VS Eventlist)
+
 ### Next
-- [ ] Use display and posttype variables for output (theme) options (ie. calendar display)
 - [ ] dynamically change categories and tags and parse new requests
-Includes category/tag select menu's from shortcode settings  
+Includes category/tag select menu's from shortcode settings
