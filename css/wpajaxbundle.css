@@ -1,0 +1,89 @@
+/* wp ajax bundle css */
+.popbox
+{
+}
+
+#calendar
+{
+}
+
+
+.fc .fc-button .fc-icon {
+  font-size: 0.8em !important;
+  line-height: 0.2em;
+}
+
+#calendar .popbox
+{
+    position:absolute; 
+    z-index:999999; 
+    display:none; 
+    width:300px; 
+    min-height:120px; 
+    max-height:380px; 
+    left:30%; top:38%;
+    overflow:auto; 
+    background-color:#dddddd; 
+    border-radius:8px; 
+
+    -webkit-box-shadow: 1px 3px 5px 1px #565656;
+    box-shadow: 1px 3px 5px 1px #565656;
+}
+#calendar .innerwrap
+{
+    padding:10px;
+}
+.fc-event-container a.fc-event
+{
+    background-color: #cccccc !important;
+    border:1px solid #cccccc !important;
+    color: #4c4c4c;
+}
+.fc-event-container a.fc-event:hover{ 
+    color: #000;
+    background-color: #ddd !important;
+    border:1px solid #ddd !important;
+}
+#calendar .popbox .close {
+
+
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    cursor: pointer;
+    display: block;
+    font-family: Courier New,monospace;
+    font-size: 28px;
+    font-weight: 700;
+    height: 30px;
+    line-height: 30px;
+    opacity: .7;
+    pointer-events: all;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    text-decoration: none;
+    top: 0;
+    z-index:99999;
+    -webkit-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+    width: 30px;
+
+    background: #0002;
+    -webkit-box-shadow: 0 0 0 1px #ffffff08;
+    box-shadow: 0 0 0 1px #ffffff08;
+    color: #eee; 
+    text-shadow: 0 0 1px #000,0 0 3px #000a;
+    }
+
+
+    @media screen and (max-width: 960px){
+        #calendar .popbox
+        {
+            position:absolute; 
+            z-index:999999; 
+            display:none; 
+            width:90%; 
+            left:5%; top:10%;
+        }
+    }
