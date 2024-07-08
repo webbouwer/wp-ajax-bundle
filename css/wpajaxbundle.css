@@ -15,31 +15,38 @@
 
 #calendar .popbox
 {
-    position:absolute; 
+    position:fixed; 
     z-index:999999; 
     display:none; 
     width:300px; 
     min-height:120px; 
     max-height:380px; 
     left:30%; top:38%;
-    overflow:auto; 
     background-color:#dddddd; 
     border-radius:8px; 
+    overflow:hidden; 
 
     -webkit-box-shadow: 1px 3px 5px 1px #565656;
     box-shadow: 1px 3px 5px 1px #565656;
+    transition: all 300ms ease-in-out;
 }
 #calendar .innerwrap
 {
+    position:relative;
     padding:10px;
+    overflow-y:scroll;
+    height:100%;
 }
 .fc-event-container a.fc-event
 {
-    background-color: #cccccc !important;
+    background-color: #630093 !important;
     border:1px solid #cccccc !important;
-    color: #4c4c4c;
+    color: #fff;
+    padding:5px;
+    transition: all 300ms ease-in-out;
 }
-.fc-event-container a.fc-event:hover{ 
+.fc-event-container a.fc-event:hover,
+.fc-event-container a.fc-event.active { 
     color: #000;
     background-color: #ddd !important;
     border:1px solid #ddd !important;

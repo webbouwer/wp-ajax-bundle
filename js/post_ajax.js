@@ -1,11 +1,11 @@
 jQuery(function ($) {
 
-
-
   let pullpage = 0; // starts onload
   let pullflag = true;
   let pullend = false;
   let reqvars;
+
+
 
   // prepare an object with default request variables
   let data_args_default = {
@@ -23,14 +23,10 @@ jQuery(function ($) {
     'page': pullpage
   };
 
-  // create fullcalendar for events https://jsfiddle.net/webbouwer/nq03sr8x/18/
-
-
   function doRequestData() {
 
 
     if ($('#wpajaxbundle').length > 0) {
-
       // request arguments
       var data = $('#wpajaxbundle').data();
 
@@ -258,7 +254,7 @@ jQuery(function ($) {
 
     });
 
-    // create fullcalendar for events 
+    // create fullcalendar for events https://jsfiddle.net/webbouwer/nq03sr8x/18/
     if (calEvents.length > 0) {
       setCalendar(calEvents);
     }
@@ -274,14 +270,57 @@ jQuery(function ($) {
   var setCalendar = function (eventlist) {
 
     insertHeadScriptTag('https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js');
-    /* test 3
-    var fullcalcss = $('<style id="fullcalcss" rel="stylesheet" type="text/css" />');
-    let popcss = ".popbox{position:absolute; z-index:999999;display:none; width:300px; min-height:120px; max-height:380px; left:30%; top:38%;overflow:auto; background-color:green; border-radius:8px;}";
-    fullcalcss.append(popcss);
-    $('head').append(fullcalcss);
-*/
+
     $('#wpajaxbundle').prepend('<div id="calendar" style="position:relative;"></div>');
-     /*     showendtime: post.custom_field_values["event-hide-end-time"],
+
+    $('#calendar').prepend('<div class="popbox"><div class="close"><span>×</span></div></div>');
+
+    var calendarEl = $('body').find('#calendar');
+
+    $('#calendar .popbox .close').click(function (event) {
+      $('#calendar .popbox').removeClass('active').fadeOut(300);
+    });
+  
+    $('#calendar .popbox').on('mouseleave', function (event) {
+
+      $('#calendar .popbox').removeClass('active');
+      setTimeout(function () {
+        if (!$('#calendar .popbox').hasClass('active')) {
+          $('#calendar .popbox').fadeOut(300);
+          $('.fc-event').removeClass('active');
+        }
+      }, 300);
+
+    });
+    $('#calendar .popbox').on('mouseenter', function (event) {
+      if (!$('#calendar .popbox').hasClass('active')) {
+        $('#calendar .popbox').addClass('active').show();
+      }
+    });
+    
+
+    var calendar = new FullCalendar.Calendar(calendarEl, { 
+      header: {
+        left: 'prev,next today',
+        right: 'title',
+        center: 'month,agendaWeek,agendaDay', 
+      },
+      theme: 'standard',
+      timeZone: 'UTC',
+      firstDay: '1',
+      initialView: 'dayGridMonth', //  'multiMonthYear', //
+      multiMonthMaxColumns: 2,
+      events: eventlist,
+      eventClick: function (eventObj, jsEvent, view) {
+        if (eventObj.url) {
+          //console.log(jsEvent); 
+          $('#wpajaxbundle .popbox').find('.innerwrap').remove();
+          let img = '';
+          if (eventObj.imgurl) {
+            img = '<img src="' + eventObj.imgurl + '" />';
+          }
+
+          /* showendtime: post.custom_field_values["event-hide-end-time"],
           allDay: post.custom_field_values["event-all-day"],
           location: post.custom_field_values["event-location"],
           link: post.custom_field_values["event-link"],
@@ -289,140 +328,22 @@ jQuery(function ($) {
           linktarget: post.custom_field_values["event-link-target"],
           linktitle: post.custom_field_values["event-link-title"],
           linkimg: post.custom_field_values["event-link-image"],
-          imgthumbid: post.custom_field_values["_thumbnail_id"],*/
-          
-    /* test 3
-    let pophtml = '<div id="fullCalModal" style="display:none;">'
-    +'<div>ID: <span id="modalID"></span></div>'
-    +'<div>Title: <span id="modalTitle"></span></div>'
-    +'<div>Start Date: <span id="modalStartDate"></span></div>'
-    +'<div>End Date: <span id="modalEndDate"></span></div>'
-    +'</div>';
-    $('#wpajaxbundle').prepend( pophtml );
-    */
+          imgthumbid: post.custom_field_values["_thumbnail_id"], */
 
-
-    //var popstyle = 'position:absolute; z-index:999999;display:none; width:300px; min-height:120px; max-height:380px; left:30%; top:38%;overflow:auto; background-color:green; border-radius:8px;';
-    $('#calendar').prepend('<div class="popbox"><div class="close"><span>×</span></div></div>');
-
-    var calendarEl = $('body').find('#calendar');
-
-    $('#calendar .popbox .close').click(function (event) {
-      $('#calendar .popbox').removeClass('active').fadeOut();
-
-    });
-
-    $('#calendar .popbox').on('mouseleave', function (event) {
-
-      $('#calendar .popbox').removeClass('active');
-      setTimeout(function () {
-        if (!$('#calendar .popbox').hasClass('active')) {
-          $('#calendar .popbox').fadeOut();
-        }
-      }, 900);
-
-    });
-
-    $('#calendar .popbox').on('mouseenter', function (event) {
-      if (!$('#calendar .popbox').hasClass('active')) {
-        $('#calendar .popbox').addClass('active').show();
-      }
-    });
-
-
-    /* test cursor follow / reposition box on outside view
-    $(document).on('mousemove', function(e){
-      if( e.clientX > ( $(window).width() - $('.popbox').width() )){
-        //$('.floatbox.display').addClass('left');
-        $('.popbox').css('left', (e.clientX - ($('.popbox').width() + 20 ) )+'px'); // epageX
-      }else{
-        $('.popbox').css('left', (e.clientX+20)+'px');
-      }
-      if( e.clientY > ( $(window).height() - $('.popbox').height() )){
-        $('.popbox').css('top', (e.clientY - ( $('.popbox').height() - 20 ) )+'px');
-      }else{
-        $('.popbox').css('top',  (e.clientY+20)+'px');
-      }
-      //$('.floatbox.display').css('top',  (e.clientY+20)+'px'); // e.pageY
-      //$('.floatbox.display').css('left', (e.clientX+20)+'px'); // epageX
-    });
-    */
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      header: {
-        left: 'title',
-        right: 'today', // 'month,agendaWeek,agendaDay',
-        center: 'prev,next',
-      },
-      theme: 'standard',
-      timeZone: 'UTC',
-      firstDay: '1',
-      initialView: 'multiMonthYear', //dayGridMonth
-      multiMonthMaxColumns: 2,
-      events: eventlist,
-      /* test 3
-      eventClick: function(eventObj, jsEvent, view) {
-        
-        
-        $('#modalID').html(eventObj.id);
-        $('#modalTitle').html(eventObj.title);
-        //$('#modalLocation').html(eventObj.extendedProps.location);
-        $('#modalStartDate').html(eventObj.start);
-        if(eventObj.end != ''){
-          $('#modalEndDate').html(eventObj.end);
-        }
-        $('#fullCalModal').insertBefore(jsEvent.currentTarget).fadeIn(); //changed just for demo purposes
-  
-        return false;
-      },
-      */
-      // test 2
-      eventClick: function (eventObj, jsEvent, view) {
-        if (eventObj.url) {
-
-          console.log(jsEvent);
-          // set popbox
-          //let boxLeft =  jsEvent.clientX+ "px";//jsEvent.clientX - jsEvent.offsetLeft + "px";//(jsEvent.clientY-80)+'px';
-          //let boxTop = jsEvent.clientY+ "px";//jsEvent.clientY - jsEvent.offsetTop + "px";//(jsEvent.clientX-180)+'px';
-          // set content
-          $('#wpajaxbundle .popbox').find('.innerwrap').remove();
-          let img = '';
-          if (eventObj.imgurl) {
-            img = '<img src="' + eventObj.imgurl + '" />';
-          }
           let eventinfo = $('<div class="innerwrap"><h3>' + eventObj.title + '</h3><div>' + img + '' + eventObj.content + '</div><div>');
-          $('#wpajaxbundle .popbox').append(eventinfo).fadeIn(); //.insertBefore(jsEvent.currentTarget)
 
+          $('#wpajaxbundle .popbox').append(eventinfo).fadeIn(300); //.insertBefore(jsEvent.currentTarget)
 
-
-          return false; //no link follow .. window.open(eventObj.url); 
+          return false; // or jsEvent.preventDefault(); no link follow .. window.open(eventObj.url); 
 
         } else {
           alert('Clicked ' + eventObj.title);
         }
-      },
+      }
+      
+ 
 
-      /* test 1
-      eventClick: function(calEvent, jsEvent, view) {
-        // call your javascript function to open modal or popup here
-        alert('Event: ' + calEvent.title);
-        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-        alert('View: ' + view.name);
-        
-        // change the border color just for fun
-        $(this).css('border-color', 'red');
-        
-         },
-      */
-      /*
-          fetch(eventObj.url)
-            .then(function (response) {
-                response.text().then(function (responseText) {
-                    console.log(responseText);
-                    alert('Clicked ' + eventObj.title);
-                });
-            });
-      */
+      
     });
     calendar.render();
     //var event = { id: 1, title: 'New event', start: new Date() };
@@ -446,6 +367,36 @@ jQuery(function ($) {
     doRequestData();
   });
 
+  /* 
+    box.addEventListener('mouseover', () => {
+    if (box.querySelector('.floatbox').innerHTML == smallload) {
+      setFloatInfo(box);
+    }
+    box.querySelector('.floatbox').classList.add("display");
+  });
+  */
+  // keep inside frame
+
+  $("body").on('mouseover', ".fc-event", function(e){
+    if(!$(this).hasClass('active')){
+      $(this).addClass('active').trigger('click');
+    }
+      if( e.clientX > ( $(window).width() - $('#wpajaxbundle .popbox').width() )){
+        //$('.floatbox.display').addClass('left');
+        $('#wpajaxbundle .popbox').css('left', (e.clientX - ($('#wpajaxbundle .popbox').width() -30 ) )+'px'); // epageX
+      }else{
+        $('#wpajaxbundle .popbox').css('left', (e.clientX-50)+'px');
+      }
+      if( e.clientY > ( $(window).height() - $('#wpajaxbundle .popbox').height() )){
+        $('#wpajaxbundle .popbox').css('top', (e.clientY - ( $('#wpajaxbundle .popbox').height() -30 ) )+'px');
+      }else{
+        $('#wpajaxbundle .popbox').css('top', (e.clientY - 50)+'px');
+      }
+    	//$('.floatbox.display').css('top',  (e.clientY+20)+'px'); // e.pageY 
+    	//$('.floatbox.display').css('left', (e.clientX+20)+'px'); // epageX
+		});
+    
+
   // onscroll load more
   $(document).on('scroll', function () {
     if ($('#wpajaxbundle').length > 0 && pullend != true) {
@@ -468,6 +419,17 @@ jQuery(function ($) {
 
   $(document).ready(function () {
     doRequestData();
+    /*
+    var mouseX;
+    var mouseY;
+    $(document).mousemove( function(e) {
+      mouseX = e.pageX; 
+      mouseY = e.pageY;
+    });  
+    $("body").on('mouseover', ".fc-event", function(){
+      $('#calendar .popbox').css({'top':(mouseY-20)+'px','left':(mouseX-20)+'px'});
+    });  
+    */ 
   });
 
 });
