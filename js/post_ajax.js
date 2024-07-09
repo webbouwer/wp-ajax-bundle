@@ -1,11 +1,10 @@
 jQuery(function ($) {
 
+
   let pullpage = 0; // starts onload
   let pullflag = true;
   let pullend = false;
   let reqvars;
-
-
 
   // prepare an object with default request variables
   let data_args_default = {
@@ -24,7 +23,6 @@ jQuery(function ($) {
   };
 
   function doRequestData() {
-
 
     if ($('#wpajaxbundle').length > 0) {
       // request arguments
@@ -197,10 +195,10 @@ jQuery(function ($) {
           //backgroundColor: 'green',
         };
         // add filtered/retrieved variables
-        event['start']  = stampToGMTdateString(post.custom_field_values['event-start-date']);
+        event['start'] = new Date(post.custom_field_values['event-start-date'] * 1000).toISOString();//stampToGMTdateString(post.custom_field_values['event-start-date']);
         //'2024-06-19T10:30:00', //end: end_gmt, //'2024-06-20T12:30:00' 
         if (post.custom_field_values['event-date'] != '') {
-          event['end']  = stampToGMTdateString(post.custom_field_values['event-date']);
+          event['end'] = new Date(post.custom_field_values['event-date'] * 1000).toISOString();//stampToGMTdateString(post.custom_field_values['event-date']);
         }
         event['url'] = post.link;
         calEvents[idx] = event;
@@ -256,7 +254,7 @@ jQuery(function ($) {
 
     // create fullcalendar for events https://jsfiddle.net/webbouwer/nq03sr8x/18/
     if (calEvents.length > 0) {
-      setCalendar(calEvents);
+      setCalendar(JSON.parse(JSON.stringify(calEvents)));
     }
 
     // hide button if less data then page amount found
@@ -266,136 +264,72 @@ jQuery(function ($) {
     // trigger after (ie. isotope display)
   }
 
-
   var setCalendar = function (eventlist) {
 
-    insertHeadScriptTag('https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js');
-
-    $('#wpajaxbundle').prepend('<div id="calendar" style="position:relative;"></div>');
-
-    $('#calendar').prepend('<div class="popbox"><div class="close"><span>×</span></div></div>');
-
+    $('body').find('#wpajaxbundle').prepend('<div id="calendar" style="position:relative;"></div><div class="popbox"><div class="close"><span>×</span></div></div>');
     var calendarEl = $('body').find('#calendar');
-
-    $('#calendar .popbox .close').click(function (event) {
-      $('#calendar .popbox').removeClass('active').fadeOut(300);
-    });
-  
-    $('#calendar .popbox').on('mouseleave', function (event) {
-
-      $('#calendar .popbox').removeClass('active');
-      setTimeout(function () {
-        if (!$('#calendar .popbox').hasClass('active')) {
-          $('#calendar .popbox').fadeOut(300);
-          $('.fc-event').removeClass('active');
-        }
-      }, 300);
-
-    });
-    $('#calendar .popbox').on('mouseenter', function (event) {
-      if (!$('#calendar .popbox').hasClass('active')) {
-        $('#calendar .popbox').addClass('active').show();
-      }
-    });
-    
-
-    var calendar = new FullCalendar.Calendar(calendarEl, { 
-      header: {
-        left: 'prev,next today',
-        right: 'title',
-        center: 'month,agendaWeek,agendaDay', 
+    console.log(eventlist);
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar: {
+        start: 'prev,next today', //'prevYear,prev,next,nextYear today',
+        center: 'title',
+        end: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      theme: 'standard',
-      timeZone: 'UTC',
-      firstDay: '1',
-      initialView: 'dayGridMonth', //  'multiMonthYear', //
-      multiMonthMaxColumns: 2,
+      footerToolbar: {
+        start: '', //'custom1,custom2',
+        center: '',
+        end: 'prev,next'
+      },
+      /*
+      customButtons: {
+        custom1: {
+          text: 'custom 1',
+          click: function() {
+            alert('clicked custom button 1!'); 
+          }
+        },
+        custom2: {
+          text: 'custom 2',
+          click: function() {
+            alert('clicked custom button 2!');
+          }
+        }
+      },
+      */
+      timeZone: 'UTC', // timeZone: 'local', // default
+      initialView: 'dayGridMonth',
       events: eventlist,
-      eventClick: function (eventObj, jsEvent, view) {
-        if (eventObj.url) {
-          //console.log(jsEvent); 
+      eventClick: function (info) { // https://fullcalendar.io/docs/eventClick
+        info.jsEvent.preventDefault();
+        if (info) {
+          //console.log(info.event.title); 
           $('#wpajaxbundle .popbox').find('.innerwrap').remove();
           let img = '';
-          if (eventObj.imgurl) {
-            img = '<img src="' + eventObj.imgurl + '" />';
+          if (info.event.extendedProps.imgurl) {
+            img = '<img class="eventcover" src="' + info.event.extendedProps.imgurl + '" />';
           }
-
-          /* showendtime: post.custom_field_values["event-hide-end-time"],
-          allDay: post.custom_field_values["event-all-day"],
-          location: post.custom_field_values["event-location"],
-          link: post.custom_field_values["event-link"],
-          linktext: post.custom_field_values["event-link-label"],
-          linktarget: post.custom_field_values["event-link-target"],
-          linktitle: post.custom_field_values["event-link-title"],
-          linkimg: post.custom_field_values["event-link-image"],
-          imgthumbid: post.custom_field_values["_thumbnail_id"], */
-
-          let eventinfo = $('<div class="innerwrap"><h3>' + eventObj.title + '</h3><div>' + img + '' + eventObj.content + '</div><div>');
-
+          let eventinfo = $('<div class="innerwrap"><div class="titlebar"><h3>' + info.event.title + '</h3></div><div class="contentbar">' + img + '' + info.event.extendedProps.content + '</div><div>');
           $('#wpajaxbundle .popbox').append(eventinfo).fadeIn(300); //.insertBefore(jsEvent.currentTarget)
-
-          return false; // or jsEvent.preventDefault(); no link follow .. window.open(eventObj.url); 
-
         } else {
-          alert('Clicked ' + eventObj.title);
+          alert('Clicked ');
         }
-      }
-      
- 
-
-      
+        return false; // or jsEvent.preventDefault(); no link follow .. window.open(eventObj.url); 
+      },
     });
+    calendar.setOption('locale', 'nl');
     calendar.render();
-    //var event = { id: 1, title: 'New event', start: new Date() };
-    //calendar.addEvent( event );
+
+    $('#wpajaxbundle .popbox .close').click(function (event) {
+      $('#wpajaxbundle .popbox').removeClass('active').fadeOut(300);
+    });
+
   }
 
-  var insertHeadScriptTag = function (scripturl) {
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.src = scripturl;
-    $("head").append(s);
-    console.log('Fullcalendar script loaded');
-  }
-
-  var stampToGMTdateString = function (timestamp) {
-    let vardate = new Date(timestamp * 1000);
-    return vardate.toGMTString();
-  }
-
+  // load more button 
   $('body').on('click', '.wpajaxbundle.button', function () {
     doRequestData();
   });
-
-  /* 
-    box.addEventListener('mouseover', () => {
-    if (box.querySelector('.floatbox').innerHTML == smallload) {
-      setFloatInfo(box);
-    }
-    box.querySelector('.floatbox').classList.add("display");
-  });
-  */
-  // keep inside frame
-
-  $("body").on('mouseover', ".fc-event", function(e){
-    if(!$(this).hasClass('active')){
-      $(this).addClass('active').trigger('click');
-    }
-      if( e.clientX > ( $(window).width() - $('#wpajaxbundle .popbox').width() )){
-        //$('.floatbox.display').addClass('left');
-        $('#wpajaxbundle .popbox').css('left', (e.clientX - ($('#wpajaxbundle .popbox').width() -30 ) )+'px'); // epageX
-      }else{
-        $('#wpajaxbundle .popbox').css('left', (e.clientX-50)+'px');
-      }
-      if( e.clientY > ( $(window).height() - $('#wpajaxbundle .popbox').height() )){
-        $('#wpajaxbundle .popbox').css('top', (e.clientY - ( $('#wpajaxbundle .popbox').height() -30 ) )+'px');
-      }else{
-        $('#wpajaxbundle .popbox').css('top', (e.clientY - 50)+'px');
-      }
-    	//$('.floatbox.display').css('top',  (e.clientY+20)+'px'); // e.pageY 
-    	//$('.floatbox.display').css('left', (e.clientX+20)+'px'); // epageX
-		});
-    
 
   // onscroll load more
   $(document).on('scroll', function () {
@@ -412,24 +346,11 @@ jQuery(function ($) {
           doRequestData();
         }
       }
-
     }
-
   });
 
-  $(document).ready(function () {
+  $(document).ready(function () { // $(window).on('load', function(){ // 
     doRequestData();
-    /*
-    var mouseX;
-    var mouseY;
-    $(document).mousemove( function(e) {
-      mouseX = e.pageX; 
-      mouseY = e.pageY;
-    });  
-    $("body").on('mouseover', ".fc-event", function(){
-      $('#calendar .popbox').css({'top':(mouseY-20)+'px','left':(mouseX-20)+'px'});
-    });  
-    */ 
   });
 
 });

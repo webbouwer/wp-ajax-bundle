@@ -50,29 +50,28 @@ class WPAjaxBundle
 
   public function getPostData_ajax_script()
   {
-
-    //wp_enqueue_style( 'wpajaxbundle-css', plugin_dir_path(__FILE__) . '/css/wpajaxbundle.css' ); 
-
     // secure with local script file assigned
     wp_enqueue_script('ajax-script', plugins_url('js/post_ajax.js', __FILE__), array('jquery'), null, true);
     wp_localize_script('ajax-script', 'ajax_data', array(
       'ajaxurl' => admin_url('admin-ajax.php'),
-    ));
-
+    ));  
+  
+    wp_enqueue_script('fullcalendar-script', 'https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js',array('jquery'), '6.1.14',); 
    
-
     //https://github.com/fullcalendar/fullcalendar
-    // https://fullcalendar.io/docs/upgrading-from-v5
+    // https://fullcalendar.io/docs/upgrading-from-v5 
     //https://www.jsdelivr.com/package/npm/fullcalendar
     //https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js 
     //wp_enqueue_style('fullcalendar-min-css', 'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css');
     //wp_enqueue_style('fullcalendar-print-css', 'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.print.css');
-    //wp_enqueue_script('fullcalendar-script', 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js', __FILE__, array('jquery'), null, true);
- 
-  }
-
+    //wp_enqueue_script('fullcalendar-script', 'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.0/fullcalendar.min.js', __FILE__, array('WP-fullcalendar'), null, true);    
+    //wp_enqueue_script('fullcalendar-script', 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'); 
+  } 
+  
   public function wpajaxbundle_theme_css() {
     wp_enqueue_style( 'wpajaxbundle-css', plugins_url('css/wpajaxbundle.css', __FILE__), array(), '0.1', );
+    wp_enqueue_style( 'wpajaxbundle-fullcalendar-css', 'https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.5.0/fullcalendar.min.css', array(), '3.5.0', );
+    
   } 
 
   public function getWPPostData()
