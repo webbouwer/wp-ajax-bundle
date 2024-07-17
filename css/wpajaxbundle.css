@@ -9,21 +9,26 @@
 }
 
 
-.fc .fc-button .fc-icon {
-  font-size: 0.8em !important;
-  line-height: 0.2em;
+/* Fullcalender */
+#wpajaxbundle .fc .fc-button {
+    font-size: 1.0em !important;
+    line-height: 0.9em;
 }
+#wpajaxbundle .fc .fc-button .fc-icon {
+    font-size: 1.3em !important;
+    line-height: 0.9em;
+} 
 
 #wpajaxbundle .popbox
 {
-    position:fixed; 
+    position:absolute; 
     z-index:999999; 
     display:none; 
-    width:300px; 
-    min-height:120px; 
-    max-height:380px; 
-    left:30%; top:38%;
-    background-color:#dddddd; 
+    width:70%; 
+    min-width:460px;
+    
+    left:15%; top:18%;
+    background-color:#fffcf2; 
     border-radius:8px; 
     overflow:hidden; 
 
@@ -31,25 +36,66 @@
     box-shadow: 1px 3px 5px 1px #565656;
     transition: all 300ms ease-in-out;
 }
-#wpajaxbundle .innerwrap
+
+
+
+#wpajaxbundle .popbox .innerwrap
 {
     position:relative; 
+    display:flex;
+    flex-wrap: wrap;
 }
-#wpajaxbundle .innerwrap .titlebar 
+#wpajaxbundle .popbox .innerwrap .column1
 {
+    position:relative; 
+    flex:3;
+    width:60%;
+}
+#wpajaxbundle .popbox .innerwrap .column2
+{
+    position:relative; 
+    flex:2;
+    width:40%;
+    padding:10px 10px 10px 0px;
+}
+
+
+#wpajaxbundle .popbox .introbar 
+{
+    position:relative; 
     padding:10px;
-    max-height: 50px; 
 }
-#wpajaxbundle .innerwrap .contentbar
+#wpajaxbundle .popbox .contentbar
 {
-    padding:10px 10px 10px;
-    overflow-y:auto;
-    max-height: 300px; 
+    position:relative; 
+    padding:0px 10px 10px;
     margin-bottom:10px;
+    overflow-y:scroll;
+    min-height:80px; 
+    max-height:280px;  
 }
-#wpajaxbundle .innerwrap .contentbar img.eventcover
+
+#wpajaxbundle .popbox .details,
+#wpajaxbundle .popbox .location
 {
-    margin-top:-10px;
+    border-left:1px solid #3d3d3d;
+    padding-left:10px;
+    padding-bottom:10px;
+}
+
+
+
+
+
+#wpajaxbundle .popbox .details h5,
+#wpajaxbundle .popbox .location h5
+{
+    font-weight:normal;
+}
+
+
+#wpajaxbundle .popbox div.image img.eventcover
+{
 }
 #calendar a.fc-event
 {

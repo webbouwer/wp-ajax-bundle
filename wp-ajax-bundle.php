@@ -57,6 +57,9 @@ class WPAjaxBundle
     ));  
   
     wp_enqueue_script('fullcalendar-script', 'https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js',array('jquery'), '6.1.14',); 
+    wp_enqueue_script('fullcalendar-language', 'https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales/nl.global.min.js',array('jquery'), '6.1.15',);
+	  
+	  // https://www.jsdelivr.com/package/npm/@fullcalendar/core?tab=files&path=locales
    
     //https://github.com/fullcalendar/fullcalendar
     // https://fullcalendar.io/docs/upgrading-from-v5 
@@ -213,7 +216,7 @@ class WPAjaxBundle
   }
 }
 new WPAjaxBundle();
-
+ 
 
 // image orient
 function check_image_orientation($pid)
