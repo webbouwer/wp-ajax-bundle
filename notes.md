@@ -1,82 +1,53 @@
-# Development Notes
+WP AJAX Plugin
 
-A lot of things changed in version 5/6 
+Dev Notes & Sources
 
-# Prior to version 6
+### wp-ajax-bundle.php:
+
+## wp post tag counts
+https://wordpress.stackexchange.com/questions/173949/order-posts-by-tags-count
+https://wordpress.stackexchange.com/questions/326497/how-to-display-related-posts-based-on-number-of-taxonomy-terms-matched
 
 
-- Retrieved post-event variables to Event properties
+## fullcalendar loading with script tags
+https://github.com/fullcalendar/fullcalendar
+https://fullcalendar.io/docs/upgrading-from-v5 
+https://www.jsdelivr.com/package/npm/fullcalendar
+https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js
+https://fullcalendar.io/docs/event-object
+https://fullcalendar.io/docs/eventDisplay
 
-showendtime: post.custom_field_values["event-hide-end-time"],
-allDay: post.custom_field_values["event-all-day"],
-location: post.custom_field_values["event-location"],
-link: post.custom_field_values["event-link"],
-linktext: post.custom_field_values["event-link-label"],
-linktarget: post.custom_field_values["event-link-target"],
-linktitle: post.custom_field_values["event-link-title"],
-linkimg: post.custom_field_values["event-link-image"],
-imgthumbid: post.custom_field_values["_thumbnail_id"], */
+## load languages
+https://www.jsdelivr.com/package/npm/@fullcalendar/core?tab=files&path=locales
 
-- Tested code to keep a cursor follow box in frame bounderies
-- 
+## Javascript date
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDate
+https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_tolocalestring_date_all
 
-    $("body").on('mouseover', ".fc-event", function(e){
-    if(!$(this).hasClass('active')){
-    $(this).addClass('active').trigger('click');
-    }
-    if( e.clientX > ( $(window).width() - $('#wpajaxbundle .popbox').width() )){
-    //$('.floatbox.display').addClass('left');
-    $('#wpajaxbundle .popbox').css('left', (e.clientX - ($('#wpajaxbundle .popbox').width() -30 ) )+'px'); // epageX
-    }else{
-    $('#wpajaxbundle .popbox').css('left', (e.clientX-50)+'px');
-    }
-    if( e.clientY > ( $(window).height() - $('#wpajaxbundle .popbox').height() )){
-    $('#wpajaxbundle .popbox').css('top', (e.clientY - ( $('#wpajaxbundle .popbox').height() -30 ) )+'px');
-    }else{
-    $('#wpajaxbundle .popbox').css('top', (e.clientY - 50)+'px');
-    }
-    //$('.floatbox.display').css('top', (e.clientY+20)+'px'); // e.pageY
-    //$('.floatbox.display').css('left', (e.clientX+20)+'px'); // epageX
-    });
-    
-    /* pop place on cursor event */
-    $(document).ready(function () {
-    doRequestData();
-    var mouseX;
-    var mouseY;
-    $(document).mousemove( function(e) {
-    mouseX = e.pageX;
-    mouseY = e.pageY;
-    });
-    
-    $("body").on('mouseover', ".fc-event", function(){
-    $('#calendar .popbox').css({'top':(mouseY-20)+'px','left':(mouseX-20)+'px'});
-    });
-    });
-    
-    /* hack script into head (for testing only, not working in protected site) */
-    var insertScriptTag = function (scripturl, pos = false) {
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.src = scripturl;
-    if( pos == 'body'){
-    $("body").append(s);
-    }else{
-    $("head").append(s);
-    }
-    console.log('Fullcalendar script loaded');
-    }
-    
-    /* Fullcalendar prior to version 6 */
-    var stampToGMTdateString = function (timestamp) {
-    let vardate = new Date(timestamp * 1000);
-    return vardate.toGMTString();
-    }
-    
-    // version 6 uses iso ISO 8601 https://stackoverflow.com/a/903206/662581
-    // https://stackoverflow.com/questions/12868176/how-do-i-convert-a-unix-timestamp-to-iso-8601-in-javascript
-    // timestamp = post.custom_field_values['event-start-date']
-    // new Date(timestamp* 1000).toISOString();
-    
+## WP PHP nesed tags 
+https://wordpress.stackexchange.com/questions/313622/nested-tax-query-that-allows-specified-categories-or-tags-but-not-other-categor
 
-This file was made with https://stackedit.io/app#
+## PHP AJAX help function
+
+        /*  libxml_use_internal_errors(true); // use this to prevent warning messages from displaying because of the bad HTML
+            $doc = new DOMDocument();
+            $doc->loadHTML(mb_convert_encoding($fulltext, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NODEFDTD);
+            //$doc->loadHTML( utf8_decode( $fulltext ) );
+            $doc->encoding = 'utf-8';
+            $doc->normalizeDocument();
+            $content = $doc->saveHTML();
+			*/
+
+### post_ajax.js
+
+## date & time
+new Date('2011-08-31T20:01:32.000Z'); // to unixstamp  Date.parse(info.event.start)
+console.log(mydate.toLocaleDateString('nl-NL').slice(0, 10) );  
+console.log(mydate.toLocaleTimeString('nl-NL', { hour: 'numeric', minute: 'numeric', hour12: true }));
+new Date('2011-08-31T20:01:32.000Z'); // to unixstamp  Date.parse(info.event.start)
+end.toLocaleTimeString('nl-NL', { hour: 'numeric', minute: 'numeric', hour12: true });  
+let mydate = new Date(info.event.extendedProps.startstamp * 1000); //console.log(mydate.toGMTString()+"<br>"+mydate.toLocaleString() );
+console.log(mydate.toLocaleDateString('nl-NL').slice(0, 10) );  
+console.log(mydate.toLocaleTimeString('nl-NL', { hour: 'numeric', minute: 'numeric', hour12: true }));
+
+

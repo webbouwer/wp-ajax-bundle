@@ -8,8 +8,7 @@
     position: relative;
 }
 
-
-/* Fullcalender */
+/* Fullcalender toolbar buttons */
 #wpajaxbundle .fc .fc-button {
     font-size: 1.0em !important;
     line-height: 0.9em;
@@ -18,27 +17,40 @@
     font-size: 1.3em !important;
     line-height: 0.9em;
 } 
-
+/* Fullcalender event grid */
+#calendar a.fc-event
+{
+    background-color: #630093 !important;
+    border:1px solid #cccccc !important;
+    color: #fff;
+    padding:5px;
+    transition: all 300ms ease-in-out;
+    border-radius: 5px;  
+}
+#calendar a.fc-event:hover,
+#calendar a.fc-event.active { 
+    color: #000;
+    background-color: #ddd !important;
+    border:1px solid #ddd !important;
+}
+/* Fullcalender event popup */
 #wpajaxbundle .popbox
 {
     position:absolute; 
     z-index:999999; 
     display:none; 
-    width:70%; 
-    min-width:460px;
-    
-    left:15%; top:18%;
-    background-color:#fffcf2; 
+    width:50%; 
+    min-width:320px;
+    left:25%; 
+    top:18%;
+    background-color:#f3f3f3; 
     border-radius:8px; 
     overflow:hidden; 
-
+    font-size:0.9em;
     -webkit-box-shadow: 1px 3px 5px 1px #565656;
     box-shadow: 1px 3px 5px 1px #565656;
     transition: all 300ms ease-in-out;
 }
-
-
-
 #wpajaxbundle .popbox .innerwrap
 {
     position:relative; 
@@ -58,62 +70,96 @@
     width:40%;
     padding:10px 10px 10px 0px;
 }
-
-
 #wpajaxbundle .popbox .introbar 
 {
     position:relative; 
-    padding:10px;
+    padding:10px 10px 0px 10px;
 }
-#wpajaxbundle .popbox .contentbar
+#wpajaxbundle .popbox .introbar .titlebar{
+    position:relative;
+    width:100%;
+    background-color:#550d83; 
+    color:#fff;
+    border-radius: 5px; 
+}
+#wpajaxbundle .popbox .introbar .titlebar h3{
+    padding:10px 10px 0px 10px;
+    color:#fff;
+}
+#wpajaxbundle .popbox .introbar .titlebar .date{
+    padding:5px 10px 10px 10px; 
+}
+#wpajaxbundle .popbox .contentbar 
 {
     position:relative; 
     padding:0px 10px 10px;
     margin-bottom:10px;
-    overflow-y:scroll;
-    min-height:80px; 
+    overflow-y:auto;
     max-height:280px;  
 }
 
-#wpajaxbundle .popbox .details,
-#wpajaxbundle .popbox .location
+
+#wpajaxbundle .popbox .contentbar a
 {
-    border-left:1px solid #3d3d3d;
+    color:#550d83;
+}
+.details .eventstart,
+.details .eventend,
+#wpajaxbundle .popbox .innerwrap .column2 .moreinfo .infobutton a
+{
+    display: block;
+    padding:10px;
+    margin-bottom:5px;
+    background-color: #fff; 
+    border-radius: 5px;  
+    font-size:1.1em;
+    color: #4c4c4c; 
+}
+
+#wpajaxbundle .popbox .innerwrap .column2 .titledate,
+#wpajaxbundle .popbox .innerwrap .column2 .time
+{
+    color:#550d83;
+}
+
+#wpajaxbundle .popbox .innerwrap .column2 .moreinfo .infobutton a
+{
+    color: #4c4c4c; 
+}
+#wpajaxbundle .popbox .innerwrap .column2 .moreinfo .infobutton a:hover
+{
+    background-color: #fff; 
+    color:#550d83;
+}
+#wpajaxbundle .popbox .innerwrap .column2 .moreinfo .infobutton a:hover:after
+{
+    content: ' >';
+}
+
+#wpajaxbundle .popbox .innerwrap .column2 .location
+{
     padding-left:10px;
     padding-bottom:10px;
 }
-
-
-
-
-
+#wpajaxbundle .popbox .innerwrap .column2 .moreinfo
+{
+}
 #wpajaxbundle .popbox .details h5,
-#wpajaxbundle .popbox .location h5
+#wpajaxbundle .popbox .location h5,
+#wpajaxbundle .popbox .moreinfo h5
 {
     font-weight:normal;
 }
-
-
+#wpajaxbundle .popbox .details h5,
+#wpajaxbundle .popbox .moreinfo h5
+{
+    margin-left:10px;
+}
 #wpajaxbundle .popbox div.image img.eventcover
 {
-}
-#calendar a.fc-event
-{
-    background-color: #630093 !important;
-    border:1px solid #cccccc !important;
-    color: #fff;
-    padding:5px;
-    transition: all 300ms ease-in-out;
-}
-#calendar a.fc-event:hover,
-#calendar a.fc-event.active { 
-    color: #000;
-    background-color: #ddd !important;
-    border:1px solid #ddd !important;
+    border-radius: 5px; 
 }
 #wpajaxbundle .popbox .close {
-
-
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
     cursor: pointer;
@@ -135,24 +181,22 @@
     -o-transition: all .3s;
     transition: all .3s;
     width: 30px;
-     
     border-bottom-left-radius:8px; 
-
     background: #0002;
     -webkit-box-shadow: 0 0 0 1px #ffffff08;
     box-shadow: 0 0 0 1px #ffffff08;
     color: #eee; 
     text-shadow: 0 0 1px #000,0 0 3px #000a;
+}
+@media screen and (max-width: 960px){
+    #wpajaxbundle .popbox
+    {
+        position:absolute; 
+        z-index:999999; 
+        display:none; 
+        width:96%; 
+        max-width:96%;
+        left:2%; 
+        top:10%;
     }
-
-
-    @media screen and (max-width: 960px){
-        #wpajaxbundle .popbox
-        {
-            position:absolute; 
-            z-index:999999; 
-            display:none; 
-            width:90%; 
-            left:5%; top:10%;
-        }
-    }
+}

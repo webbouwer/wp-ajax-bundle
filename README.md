@@ -33,12 +33,12 @@ Regular posttype properties
 - [x] Setup basic result view
 - [x] Event posttype Fullcalendar display including popup event info
 - [x] Adjusted to Fullcalendar version 6!
-- [ ]  Testing: Floating popup
+- [x]  Assign style and interaction
 
 ### On the road [not mapped]
 - [ ]  Plugin settings/options screen
-- [ ]  Assign style and interaction
-- [ ]  Dynamically change categories and tags and parse new requests
+- [ ]  Dynamically change categories and tags and parse new requests 
+- [ ]  Testing: Floating popup
 
 [Development notes](https://github.com/webbouwer/wp-ajax-bundle/blob/development/notes.md)
 DevOp @ [webdesigndenhaag.net/lab/wordpress/develop](https://webdesigndenhaag.net/lab/wordpress/develop/hello-events-test/)
