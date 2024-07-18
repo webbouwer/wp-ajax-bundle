@@ -36,7 +36,8 @@ class WPAjaxBundleShortcodes{
 
     $loader = '';
     if($att['loader'] != 'hidden'){
-      $loader = '<div class="wpajaxbundle loader"><span>Loading</span></div>';
+      //$loader = '<div class="wpajaxbundle loader"><span>Loading</span></div>';
+      $loader = '<div class="wpajaxbundle loader"><div class="load-wrapp"><div class="load-10"><div class="bar"></div></div></div></div>';
     }
 	
 	  if($att['display'] == ''){
@@ -48,7 +49,8 @@ class WPAjaxBundleShortcodes{
     .' data-tax1="'.$att['tax1'].'" data-terms1="'.$att['terms1'].'" data-tax2="'.$att['tax2'].'" data-terms2="'.$att['terms2'].'"'
     .' data-relation="'.$att['relation'].'" data-orderby="'.$att['orderby'].'" data-order="'.$att['order'].'"'
     .' data-ppp="'.$att['ppp'].'" data-display="'.$att['display'].'" data-load="'.$att['load'].'">'
-    .'<div class="itemcontainer"></div>'.$button.''.$loader.'</div>'; 
+    .'<div class="itemcontainer"></div>'.$button.''.$loader.'</div>'
+    . '<div class="poweredby">Powered by <a href="https://oddsized.com" target="_blank">Oddsized Interactive</a></div>';
     //print_r($att);
     return $html;
 

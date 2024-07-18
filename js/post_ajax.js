@@ -22,6 +22,9 @@ jQuery(function ($) {
     'page': pullpage
   };
 
+  // $('.wpajaxbundle.loader').append('<div class="load-wrapp"><div class="load-10"><div class="bar"></div></div></div>');
+
+ 
   function doRequestData() {
 
     if ($('#wpajaxbundle').length > 0) {
@@ -175,11 +178,13 @@ jQuery(function ($) {
       // add event to eventlist 
       if (post.type == 'event' && post.custom_field_values['event-start-date'].length > 0) {
 
+      
         // build event object 
         var event = {
           id: post.id,
           title: post.title,
           'event-summary': post.excerpt,
+          description: post.custom_field_values["event-summary"],
           content: post.content,
           imgurl: post.imgurl,
           showendtime: post.custom_field_values["event-hide-end-time"],
@@ -193,11 +198,16 @@ jQuery(function ($) {
           imgthumbid: post.custom_field_values["_thumbnail_id"],
           //backgroundColor: 'green',
         };
+        console.log(post.custom_field_values["event-all-day"]);
+        
+        event['allDay'] = false;
+        if( post.custom_field_values["event-all-day"][0] === 'yes' ){
+          event['allDay'] = true;
+        }
 
         // add filtered/retrieved variables
         event['start'] = new Date(post.custom_field_values['event-start-date'] * 1000).toISOString();
         event['startstamp'] = post.custom_field_values['event-start-date'];
-        console.log(post.custom_field_values['event-start-date'])
         if (post.custom_field_values['event-date'] != '') {
           event['end'] = new Date(post.custom_field_values['event-date'] * 1000).toISOString(); 
           event['endstamp'] = post.custom_field_values['event-date'];
@@ -254,7 +264,7 @@ jQuery(function ($) {
 
     });
 
-    // create fullcalendar for events https://jsfiddle.net/webbouwer/nq03sr8x/18/
+    // create fullcalendar for events https://jsfiddle.net/webbouwer/nq03sr8x/18/ 
     if (calEvents.length > 0) {
       setCalendar(JSON.parse(JSON.stringify(calEvents)));
     }
@@ -278,14 +288,23 @@ jQuery(function ($) {
   }
 
   var setCalendar = function (eventlist) {
+    
+    var mouseX;
+    var mouseY;
+    var tooltip;
+    var boxheight;
+    $(document).mousemove( function(e) {
+      mouseX = e.pageX;
+      mouseY = e.pageY;
+      $('body .event-tooltip').css({'top':(mouseY - boxheight)+'px','left':(mouseX-20)+'px'});
+    });
 
     $('body').find('#wpajaxbundle').prepend('<div id="calendar" style="position:relative;"></div><div class="popbox"><div class="close"><span>×</span></div></div>');
     var calendarEl = $('body').find('#calendar');
-    console.log(eventlist);
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
       headerToolbar: {
-        start: 'prev,next today', //'prevYear,prev,next,nextYear today',
+        start: 'prev,next today', //'prevYear,prev,next,nextYear today', 
         center: 'title',
         end: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
@@ -312,7 +331,23 @@ jQuery(function ($) {
       */
       timeZone: 'UTC', // timeZone: 'local', // default
       initialView: 'dayGridMonth',
+      displayEventTime : false, // remove grid event time (number)
+      //eventDisplay: 'block', // remove grid event dot (short day event)
       events: eventlist,
+      eventMouseEnter: function(info){
+        if( info.event.extendedProps.description != ''){
+          tooltip = '<div class="event-tooltip"><div class="tip">'+info.event.extendedProps.description+'</div></div>';
+          $('body').append(tooltip);
+          boxheight = $('body .event-tooltip').height();
+          console.log(boxheight);
+          $('body .event-tooltip').css({'top':(mouseY - boxheight)+'px','left':(mouseX)+'px'}).fadeIn(100);
+        }
+      },
+      eventMouseLeave: function(){
+        $('body .event-tooltip').fadeOut(100, function(){ 
+          $(this).detach(); 
+        });
+      },
       eventClick: function (info) { // https://fullcalendar.io/docs/eventClick
         info.jsEvent.preventDefault();
         
@@ -321,7 +356,7 @@ jQuery(function ($) {
           $('#wpajaxbundle .popbox').find('.innerwrap').remove();
           
           let linktarget = '_self';
-          if( info.event.extendedProps.linktarget == 'yes'){
+          if( info.event.extendedProps.linktarget == 'yes'){ 
             linktarget = '_blank';
           }
           let title = info.event.title;
@@ -345,12 +380,12 @@ jQuery(function ($) {
           var startdate = start.toLocaleDateString('nl-NL').slice(0, 10);
           var startdatetext = days[start.getDay()] + ' ' + start.getDate() +' '+ monthsfull[start.getMonth()]+' '+ start.getFullYear();
           var starttime = formatAMPM(start);
-          if( info.event.end != null && info.event.extendedProps.showendtime != 'yes'){
+          if( info.event.end != null){
             var end = new Date( info.event.extendedProps.endstamp * 1000 );
             var enddate = end.toLocaleDateString('nl-NL').slice(0, 10);
             var enddatetext = days[end.getDay()] + ' ' + end.getDate() +' '+ monthsfull[end.getMonth()] +' '+ end.getFullYear(); 
             var endtime = formatAMPM(end);
-          }
+          } 
 
           let eventinfo = $('<div class="innerwrap"></div>');
           let ehtml = '<div class="column1"><div class="introbar"><div class="image">' + img + '</div>';
@@ -368,13 +403,25 @@ jQuery(function ($) {
           ehtml += '</div>';
           
           ehtml += '<div class="column2"><div class="details"><h5>Details</h5>';
-          ehtml += '<div class="eventstart">start: <div class="titledate">'+startdatetext+'</div>vanaf <span class="time">'+starttime+'<span></div>'; // '+ startdate + ' - 
-
-          if( info.event.end != null && info.event.extendedProps.showendtime != 'yes'){ 
-            ehtml += '<div class="eventend">eind: <div class="titledate">'+enddatetext+'</div>om <span class="time">'+endtime+'</span></div>'; //' + enddate + ' - 
+          
+          if( info.event.allDay){
+            ehtml += '<div class="allday">Gehele dag</div>'; 
           }
-          if( info.event.extendedProps.allDay ){
-            ehtml += '<div class="allday">Gehele dag</div>';
+          //console.log(info.event.allDay); 
+          ehtml += '<div class="eventstart">start: <div class="titledate">'+startdatetext+'</div>';
+          if( !info.event.allDay ){
+          ehtml += 'vanaf <span class="time">'+starttime+'<span>';
+          }
+          ehtml += '</div>'; // '+ startdate + ' - 
+          if( info.event.end != null){
+            ehtml += '<div class="eventend">eind: <div class="titledate">'+enddatetext+'</div>';
+          
+            if( ! info.event.allDay && info.event.extendedProps.showendtime[0] == 'no'){ 
+              ehtml += 'tot <span class="time">'+endtime+'</span>'; //' + enddate + ' -  
+            }
+            //console.log(info.event.extendedProps.showendtime[0]); 
+            
+          ehtml += '</div>'; 
           }
           ehtml += '</div>';
 
@@ -385,6 +432,8 @@ jQuery(function ($) {
           ehtml += '<div class="moreinfo"><h5>Meer info</h5><span class="infobutton"><a href="' + info.event.extendedProps.link + '" target="' + linktarget + '">' + info.event.extendedProps.linktext + '</a></span></div>';
           }
           ehtml += '</div></div>';
+          
+          //ehtml += '<div class="poweredby"><a href="https://oddsized.com" target="_blank">Oddsized Interactive</a></div>'; 
 
           eventinfo.append(ehtml);
           $('#wpajaxbundle .popbox').append(eventinfo).fadeIn(300); //.insertBefore(jsEvent.currentTarget)
@@ -397,6 +446,21 @@ jQuery(function ($) {
     });
     calendar.setOption('locale', 'nl');
     calendar.render();
+
+    /*
+    $("body").on('mouseover', ".fc-event", function(e){
+    
+      console.log('check');
+      tooltip = '<div class="event-tooltip"><div class="tip">test</div></div>';
+      $('body').append(tooltip);
+      $('body .event-tooltip').css({'top':(mouseY-50)+'px','left':(mouseX-20)+'px'}).fadeIn(300);
+    });
+    $("body").on('mouseout', ".fc-event", function(e){
+      $('body .event-tooltip').fadeOut(300, function(){
+        $(this).detach(); 
+      });
+    });
+    */
 
     $('#wpajaxbundle .popbox .close').click(function (event) {
       $('#wpajaxbundle .popbox').removeClass('active').fadeOut(300);

@@ -51,9 +51,11 @@ class WPAjaxBundle
       'ajaxurl' => admin_url('admin-ajax.php'),
     ));
 
+    wp_enqueue_script('tooltip-script', 'https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js', array('jquery'), '1.3.3',);
     wp_enqueue_script('fullcalendar-script', 'https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js', array('jquery'), '6.1.14',);
     wp_enqueue_script('fullcalendar-language', 'https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales/nl.global.min.js', array('jquery'), '6.1.15',);
- 
+    
+    
   }
 
   public function wpajaxbundle_theme_css()
