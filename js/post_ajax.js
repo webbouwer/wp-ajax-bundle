@@ -1,5 +1,8 @@
 jQuery(function ($) {
 
+ //https://gist.github.com/webbouwer/7a68d5c1e1481a602ce39bc262c48b75
+
+
 
   let pullpage = 0; // starts onload
   let pullflag = true;
@@ -294,8 +297,8 @@ jQuery(function ($) {
     var tooltip;
     var boxheight;
     $(document).mousemove( function(e) {
-      mouseX = e.pageX;
-      mouseY = e.pageY;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
       $('body .event-tooltip').css({'top':(mouseY - boxheight)+'px','left':(mouseX-20)+'px'});
     });
 
@@ -313,22 +316,7 @@ jQuery(function ($) {
         center: '',
         end: 'prev,next'
       },
-      /*
-      customButtons: {
-        custom1: {
-          text: 'custom 1',
-          click: function() {
-            alert('clicked custom button 1!'); 
-          }
-        },
-        custom2: {
-          text: 'custom 2',
-          click: function() {
-            alert('clicked custom button 2!');
-          }
-        }
-      },
-      */
+
       timeZone: 'UTC', // timeZone: 'local', // default
       initialView: 'dayGridMonth',
       displayEventTime : false, // remove grid event time (number)
