@@ -36,6 +36,7 @@ Regular posttype properties
 - [x]  Assign style and interaction
 
 ### On the road [not mapped]
+- [ ]  Mobile (touch/smallscreen) tuning
 - [ ]  Plugin settings/options screen
 - [ ]  Dynamically change categories and tags and parse new requests 
 - [ ]  Testing: Floating popup
